@@ -36,6 +36,15 @@ class TestPostView(BaseTest):
         ok_('error' in data)
         eq_(data['code'], 500)
 
+    def test_post_request_with_same_facebookId_two_times(self):
+        response = self.client.post('/person/', data={'facebookId': 1352586646})
+        response = self.client.post('/person/', data={'facebookId': 1352586646})
+        eq_(response.status_code, 403)
+        data = json.loads(response.data)
+        ok_('error' in data)
+        eq_(data['code'], 102)
+
+
 
 class TestGetView(BaseTest):
 

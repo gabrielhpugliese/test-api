@@ -8,6 +8,7 @@ from application import fb
 ERROR_CODES = {
     100: 'You must pass facebookId of person to add',
     101: 'Could not get user from Graph API',
+    102: 'That user is already saved on db',
     200: 'You must pass the limit param',
     300: 'You must pass facebookId of person to remove',
     301: 'User does not exists',
@@ -22,12 +23,16 @@ class Person(Resource):
         if not facebook_id:
             return {'error': ERROR_CODES[100], 'code': 100}, 400
 
+        if FBUser.query.filter_by(facebook_id=facebook_id).first():
+            return {'error': ERROR_CODES[102], 'code': 102}, 403
+
         try:
             graph_user = fb.get_user(facebook_id)
         except ValueError:
             return {'error': ERROR_CODES[101], 'code': 101}, 500
         except fb.FBError:
             return {'error': ERROR_CODES[500], 'code': 500}, 500
+
         fb_user = FBUser(
             facebook_id=facebook_id,
             name=graph_user.get('name'),
