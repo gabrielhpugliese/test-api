@@ -17,7 +17,6 @@ ERROR_CODES = {
 
 class Person(Resource):
 
-
     def post(self):
         facebook_id = request.form.get('facebookId')
         if not facebook_id:
@@ -27,6 +26,8 @@ class Person(Resource):
             graph_user = fb.get_user(facebook_id)
         except ValueError:
             return {'error': ERROR_CODES[101], 'code': 101}, 500
+        except fb.FBError:
+            return {'error': ERROR_CODES[500], 'code': 500}, 500
         fb_user = FBUser(
             facebook_id=facebook_id,
             name=graph_user.get('name'),

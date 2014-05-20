@@ -8,7 +8,11 @@ Teste Magazine Luiza
 
 ## Running
 
-On project root, run `python runserver.py` and access http://localhost:5000 on browser.
+On project root, run `python runserver.py` and make API requests.
+
+## Tests
+
+This project uses nosetests. On project root, run `nosetests tests/*`
 
 ## Notes
 

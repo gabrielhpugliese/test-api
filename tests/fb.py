@@ -30,14 +30,16 @@ class FBTest(BaseFBTest):
     def test_get_user_without_params(self):
         user = fb.get_user() 
 
-    @raises(ValueError)
-    def test_get_user_with_string_param(self):
-        user = fb.get_user(self.faker.name())
-
     def test_get_user_with_valid_param(self):
         facebook_id = '1352586646'
         user = fb.get_user(facebook_id)
+
         ok_(user)
         eq_(user['id'], facebook_id)
         eq_(user['name'], 'Gabriel H Pugliese')
         eq_(user['username'], 'gabrielsapo')
+
+    @raises(fb.FBError)
+    def test_get_user_with_invalid_facebook_id(self):
+        facebook_id = '1' * 15
+        user = fb.get_user(facebook_id)
