@@ -1,35 +1,12 @@
-import random
-
-from flask.ext.testing import TestCase
 from nose.tools import ok_, eq_, raises
 from sqlalchemy.exc import IntegrityError
-from faker import Faker
 
+from . import BaseTest
 from application.models import FBUser
-from application import db, app
+from application import db
 
 
-class BaseModelTest(TestCase):
-
-    render_templates = False
-    SQLALCHEMY_DATABASE_URI = 'sqlite://'
-
-    def create_app(self):
-        app.config['TESTING'] = True
-        return app
-
-    def setUp(self):
-        db.create_all()
-        self.faker = Faker()
-        self.faker.gender = lambda: random.choice(['male', 'female', None])
-        self.faker.facebook_id = lambda: str(random.randint(1, 10000000000))
-
-    def tearDown(self):
-        db.session.remove()
-        db.drop_all()
-
-
-class TestFBUser(BaseModelTest):
+class TestFBUser(BaseTest):
 
     @raises(IntegrityError)
     def test_create_blank_fbuser(self):

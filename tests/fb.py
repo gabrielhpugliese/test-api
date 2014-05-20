@@ -1,30 +1,11 @@
-from flask.ext.testing import TestCase
 from nose.tools import ok_, eq_, raises
-from faker import Faker
 
+from . import BaseTest
 import settings
-from application import db, app, fb
+from application import fb
 
 
-class BaseFBTest(TestCase):
-
-    render_templates = False
-    SQLALCHEMY_DATABASE_URI = 'sqlite://'
-
-    def create_app(self):
-        app.config['TESTING'] = True
-        return app
-
-    def setUp(self):
-        db.create_all()
-        self.faker = Faker()
-
-    def tearDown(self):
-        db.session.remove()
-        db.drop_all()
-
-
-class FBTest(BaseFBTest):
+class FBTest(BaseTest):
 
     @raises(TypeError)
     def test_get_user_without_params(self):
