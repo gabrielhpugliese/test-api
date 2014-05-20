@@ -1,3 +1,5 @@
+import json
+
 from sqlalchemy import event
 from sqlalchemy.exc import IntegrityError
 
@@ -8,7 +10,7 @@ class FBUser(db.Model):
     __table_args__ = {'useexisting': True}
 
     id = db.Column(db.Integer, primary_key=True)
-    facebook_id = db.Column(db.Integer, unique=True, nullable=False)
+    facebook_id = db.Column(db.String(255), unique=True, nullable=False)
     name = db.Column(db.String(255), nullable=False)
     username = db.Column(db.String(255), nullable=False)
     gender = db.Column(db.String(100), nullable=True)
@@ -17,9 +19,23 @@ class FBUser(db.Model):
         db.session.add(self)
         db.session.commit()
 
+    def to_dict(self):
+        convert = dict()
+        d = dict()
+        for c in self.__class__.__table__.columns:
+            v = getattr(self, c.name)
+            if c.type in convert.keys() and v is not None:
+                try:
+                    d[c.name] = convert[c.type](v)
+                except:
+                    d[c.name] = "Error:  Failed to covert using ", str(convert[c.type])
+            elif v is None:
+                d[c.name] = str()
+            else:
+                d[c.name] = v
 
-@event.listens_for(FBUser, 'before_insert')
-def check_facebook_id_type(mapper, connection, target, *args, **kwargs):
-    if type(target.facebook_id) != int or target.facebook_id <= 0:
-        raise IntegrityError('Facebook id cannot be other type than positive int', type(target.facebook_id), IntegrityError)
+        return d
 
+    def remove_and_commit(self):
+        db.session.delete(self)
+        db.session.commit()
