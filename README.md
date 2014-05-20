@@ -1,6 +1,8 @@
 Teste Magazine Luiza
 ------------------
 
+[![Build Status](https://travis-ci.org/gabrielhpugliese/test-api.svg?branch=master)](https://travis-ci.org/gabrielhpugliese/test-api)
+
 ## Installation
 
 * Install sqlite
