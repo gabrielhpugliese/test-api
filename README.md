@@ -14,7 +14,7 @@ On project root, run `python runserver.py` and make API requests.
 
 ## Tests
 
-This project uses nosetests. On project root, run `nosetests tests/*`
+This project uses nosetests. On project root, run `nosetests --with-coverage --cover-package=application tests/*`
 
 ## Notes
 
