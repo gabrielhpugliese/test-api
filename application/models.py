@@ -20,6 +20,6 @@ class FBUser(db.Model):
 
 @event.listens_for(FBUser, 'before_insert')
 def check_facebook_id_type(mapper, connection, target, *args, **kwargs):
-    if type(target.facebook_id) != int:
-        raise IntegrityError('Facebook id cannot be other type than int', type(target.facebook_id), IntegrityError)
+    if type(target.facebook_id) != int or target.facebook_id <= 0:
+        raise IntegrityError('Facebook id cannot be other type than positive int', type(target.facebook_id), IntegrityError)
 
